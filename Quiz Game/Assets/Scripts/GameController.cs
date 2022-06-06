@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour
     public Text questionDisplayText;
     public SimpleObjectPool answerButtonObjectPool;
     public Transform answerButtonParent;
+    public GameObject questionDisplay;
+    public GameObject roundEndDisplay;
 
     private DataController dataController;
     private RoundData currentRoundData;
@@ -24,7 +26,6 @@ public class GameController : MonoBehaviour
         dataController = FindObjectOfType<DataController>();
         currentRoundData = dataController.GetCurrentRoundData();
         questionPool = currentRoundData.questions;
-
         questionIndex = 0;
 
         ShowQuestion();
@@ -57,6 +58,34 @@ public class GameController : MonoBehaviour
             answerButtonGameObjects.RemoveAt(0);
         }
     }
+
+    public void AnswerButtonClicked(bool isCorrect)
+    {
+        if (questionPool.Length > questionIndex + 1)
+        {
+            questionIndex++;
+            ShowQuestion();
+        }
+        else
+        {
+            EndRound();
+        }
+
+    }
+
+    public void EndRound()
+    {
+        isRoundActive = false;
+
+        questionDisplay.SetActive(false);
+        roundEndDisplay.SetActive(true);
+    }
+
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene("MenuScreen");
+    }
+
 
     // Update is called once per frame
     void Update()
