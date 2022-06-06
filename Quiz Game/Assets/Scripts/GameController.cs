@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class GameController : MonoBehaviour
 {
     public Text questionDisplayText;
+    public Text scoreDisplayText;
+    public Text timeRemainingDisplayText;
     public SimpleObjectPool answerButtonObjectPool;
     public Transform answerButtonParent;
     public GameObject questionDisplay;
@@ -17,7 +19,9 @@ public class GameController : MonoBehaviour
     private QuestionData[] questionPool;
 
     private bool isRoundActive;
+    private float timeRemaining;
     private int questionIndex;
+    private int playerScore;
     private List<GameObject> answerButtonGameObjects = new List<GameObject>();
 
     // Use this for initialization
@@ -26,6 +30,10 @@ public class GameController : MonoBehaviour
         dataController = FindObjectOfType<DataController>();
         currentRoundData = dataController.GetCurrentRoundData();
         questionPool = currentRoundData.questions;
+        timeRemaining = currentRoundData.timeLimitInSeconds;
+        UpdateTimeRemainingDisplay();
+
+        playerScore = 0;
         questionIndex = 0;
 
         ShowQuestion();
@@ -61,6 +69,12 @@ public class GameController : MonoBehaviour
 
     public void AnswerButtonClicked(bool isCorrect)
     {
+        if (isCorrect)
+        {
+            playerScore += currentRoundData.pointsAddedForCorrectAnswer;
+            scoreDisplayText.text = "Score: " + playerScore.ToString();
+        }
+
         if (questionPool.Length > questionIndex + 1)
         {
             questionIndex++;
@@ -86,11 +100,25 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("MenuScreen");
     }
 
+    private void UpdateTimeRemainingDisplay()
+    {
+        timeRemainingDisplayText.text = "Time: " + Mathf.Round(timeRemaining).ToString();
+    }
 
     // Update is called once per frame
     void Update()
     {
+        if (isRoundActive)
+        {
+            timeRemaining -= Time.deltaTime;
+            UpdateTimeRemainingDisplay();
 
+            if (timeRemaining <= 0f)
+            {
+                EndRound();
+            }
+
+        }
     }
 }
 
