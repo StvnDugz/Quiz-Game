@@ -6,7 +6,7 @@ public class AnswerButton : MonoBehaviour
 {
 
     public Text answerText;
-
+    private AudioSource audioSource;
     private AnswerData answerData;
     private GameController gameController;
 
@@ -14,6 +14,7 @@ public class AnswerButton : MonoBehaviour
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Setup(AnswerData data)
@@ -25,6 +26,7 @@ public class AnswerButton : MonoBehaviour
 
     public void HandleClick()
     {
+        audioSource.Play();
         gameController.AnswerButtonClicked(answerData.isCorrect);
     }
 }

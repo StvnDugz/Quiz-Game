@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
     private int playerScore;
     private List<GameObject> answerButtonGameObjects = new List<GameObject>();
 
+
     // Use this for initialization
     void Start()
     {
@@ -97,7 +98,7 @@ public class GameController : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("MenuScreen");
+        SceneManager.LoadScene("Menu");
     }
 
     private void UpdateTimeRemainingDisplay()
